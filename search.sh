@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════════════
-# davincix · kernel — online search (DuckDuckGo)
+# davinci · kernel — online search (DuckDuckGo)
 #
 # Orchestrates the providers (providers/<source>.py): it receives "thumb|full" pairs on
 # stdout, validates the full URL content-type, downloads the thumbnail,

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════════════
-# davincix · kernel — slideshow
+# davinci · kernel — slideshow
 #
 # Rotates the wallpaper on an interval. It runs as a detached daemon (PID file
 # + enabled flag for session restart). It only cycles STILL images (videos are
