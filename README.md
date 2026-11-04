@@ -28,7 +28,7 @@ git clone https://github.com/equisdots/davinci ~/davinci
 
 The UI resolves the CLI in this order:
 
-1. `$DAVINCI_CLI` — explicit path to `davinci.sh` (legacy `$DAVINCIX_CLI` is still accepted).
+1. `$DAVINCI_CLI` — explicit path to `davinci.sh`.
 2. Sibling `../kernel/davinci.sh` next to the UI.
 
 So on the equisdots shell the recommended wiring is a symlink:
@@ -60,7 +60,6 @@ davinci.sh paths
 davinci.sh --version
 ```
 
-`DAVINCIX_*` aliases remain accepted for older scripts and installations.
 
 ## Environment overrides
 

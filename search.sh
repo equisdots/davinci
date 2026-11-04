@@ -10,7 +10,7 @@
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$DIR/paths.sh"
-davincix_ensure_dirs
+davinci_ensure_dirs
 
 QUERY="${1:-}"
 if [ -z "$QUERY" ]; then
@@ -36,22 +36,22 @@ if [ ! -f "$PROVIDER" ]; then
 fi
 
 # API keys para proveedores que las necesitan (Pexels, Pixabay...).
-KEYS_FILE="$DAVINCIX_STATE_DIR/keys.conf"
+KEYS_FILE="$DAVINCI_STATE_DIR/keys.conf"
 if [ -f "$KEYS_FILE" ]; then
     set -a
     . "$KEYS_FILE"
     set +a
 fi
 
-SEARCH_DIR="$DAVINCIX_SEARCH_DIR"
-MAP_FILE="$DAVINCIX_MAP_FILE"
-CONTROL_FILE="$DAVINCIX_CONTROL_FILE"
-CURSOR_FILE="$DAVINCIX_CURSOR_DIR/$SOURCE"
-LOG_FILE="$DAVINCIX_LOG_DIR/search_downloader.log"
+SEARCH_DIR="$DAVINCI_SEARCH_DIR"
+MAP_FILE="$DAVINCI_MAP_FILE"
+CONTROL_FILE="$DAVINCI_CONTROL_FILE"
+CURSOR_FILE="$DAVINCI_CURSOR_DIR/$SOURCE"
+LOG_FILE="$DAVINCI_LOG_DIR/search_downloader.log"
 
 echo "=== Starting $SOURCE search for: $QUERY (continue=$CONTINUE) ===" > "$LOG_FILE"
 
-mkdir -p "$SEARCH_DIR" "$DAVINCIX_CURSOR_DIR"
+mkdir -p "$SEARCH_DIR" "$DAVINCI_CURSOR_DIR"
 
 # The provider → shell pipe delivers the links; the shell applies backpressure.
 python3 -u "$PROVIDER" "$QUERY" \
