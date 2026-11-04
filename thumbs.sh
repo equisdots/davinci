@@ -16,31 +16,31 @@
 # ═══════════════════════════════════════════════════════════════════════════
 
 # May be sourced on its own (cmd_fetch); make sure the helpers are present.
-if ! declare -F davincix_flat_name >/dev/null 2>&1; then
+if ! declare -F davinci_flat_name >/dev/null 2>&1; then
     # shellcheck disable=SC1091
     source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/util.sh"
 fi
 
 # Rebuild the manifest from whatever is in the thumbnail directory.
-davincix_build_manifest() {
-    find "$DAVINCIX_THUMB_DIR" -maxdepth 1 -type f \
+davinci_build_manifest() {
+    find "$DAVINCI_THUMB_DIR" -maxdepth 1 -type f \
         ! -name '.source_dir' ! -name '.manifest' \
-        -printf "%f\n" | sort > "$DAVINCIX_MANIFEST"
+        -printf "%f\n" | sort > "$DAVINCI_MANIFEST"
 }
 
 # Prepare thumbnails (async: returns immediately).
-davincix_thumbs_prep() {
-    mkdir -p "$DAVINCIX_THUMB_DIR"
+davinci_thumbs_prep() {
+    mkdir -p "$DAVINCI_THUMB_DIR"
 
     (
         # Atomic lock: flock releases itself when this subshell exits, so a
         # prep killed mid-run can never leave a stale lock that skips future
         # runs (the old PID-file check could: a reused PID looks alive).
-        exec 9>"$DAVINCIX_PREP_LOCK"
+        exec 9>"$DAVINCI_PREP_LOCK"
         flock -n 9 || exit 0
 
-        export THUMB_DIR="$DAVINCIX_THUMB_DIR" SRC_DIR="$DAVINCIX_WALLPAPER_DIR" \
-               MANIFEST="$DAVINCIX_MANIFEST" MAGICK_THREAD_LIMIT=1
+        export THUMB_DIR="$DAVINCI_THUMB_DIR" SRC_DIR="$DAVINCI_WALLPAPER_DIR" \
+               MANIFEST="$DAVINCI_MANIFEST" MAGICK_THREAD_LIMIT=1
 
         THUMB_SOURCE_FILE="$THUMB_DIR/.source_dir"
         if [ -f "$THUMB_SOURCE_FILE" ]; then
@@ -80,7 +80,7 @@ davincix_thumbs_prep() {
         while IFS= read -r dir; do
             [ -n "$dir" ] || continue
             rel="${dir#"$SRC_DIR"/}"
-            flat="$(davincix_flat_name "$rel")"
+            flat="$(davinci_flat_name "$rel")"
             thumb="scn_$flat.jpg"
             echo "$thumb" >> "$EXPECTED"
             [ -f "$THUMB_DIR/$thumb" ] && continue
@@ -125,7 +125,7 @@ davincix_thumbs_prep() {
                 fi
             fi
 
-            flat="$(davincix_flat_name "$rel")"
+            flat="$(davinci_flat_name "$rel")"
             if [[ "${extension,,}" =~ ^(mp4|mkv|mov|webm)$ ]]; then
                 thumb="000_$flat"
                 echo "$thumb" >> "$EXPECTED"

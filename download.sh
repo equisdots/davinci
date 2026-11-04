@@ -6,7 +6,7 @@
 # ═══════════════════════════════════════════════════════════════════════════
 
 # Download $1 into $2 (webp → converted in place).
-davincix_download() {
+davinci_download() {
     local url="$1" dest="$2" tmp="$2.tmp"
     curl -s -L -A "Mozilla/5.0" "$url" -o "$tmp" || return 1
     if file "$tmp" | grep -iq "webp"; then

@@ -13,7 +13,7 @@ import time
 import urllib.parse
 import urllib.request
 
-LOG_DIR = os.environ.get("DAVINCIX_LOG_DIR", "/tmp/quickshell/logs")
+LOG_DIR = os.environ.get("DAVINCI_LOG_DIR", "/tmp/quickshell/logs")
 LOG_FILE = os.path.join(LOG_DIR, "pixabay_scraper.log")
 API = "https://pixabay.com/api/videos/"
 MIN_W, MIN_H = 1920, 1080
@@ -99,7 +99,7 @@ def main():
     url = API + "?" + urllib.parse.urlencode(params)
 
     headers = {
-        "User-Agent": "davincix/0.1 (wallpaper engine)",
+        "User-Agent": "davinci/0.1 (wallpaper engine)",
         "Accept": "application/json",
     }
 
