@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════════════
-# davincix · kernel — download
+# davinci · kernel — download
 #
 # Downloads a URL to a destination file, converting webp when needed.
 # ═══════════════════════════════════════════════════════════════════════════

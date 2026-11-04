@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════════════
-# davincix · kernel — thumbnails
+# davinci · kernel — thumbnails
 #
 # Builds and maintains the picker's thumbnail cache by scanning the wallpaper
 # directory RECURSIVELY:

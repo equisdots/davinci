@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the davincix kernel are documented here.
+All notable changes to the davinci kernel are documented here.
 Dates use YYYY-MM-DD.
 
 ## [2026-10-02]

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════════════
-# davincix · kernel — shared helpers
+# davinci · kernel — shared helpers
 #
 # Logging and media-type detection used across the kernel modules.
 # ═══════════════════════════════════════════════════════════════════════════

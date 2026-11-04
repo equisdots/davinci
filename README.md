@@ -1,4 +1,4 @@
-# davincix
+# davinci
 
 Wallpaper engine kernel for the [equisdots](https://github.com/equisdots)
 desktop. Headless CLI that applies, thumbnails, searches and rotates
@@ -23,18 +23,18 @@ Version: **0.1.0** · License: MIT
 ## Install
 
 ```bash
-git clone https://github.com/equisdots/davincix ~/davincix
+git clone https://github.com/equisdots/davinci ~/davinci
 ```
 
 The UI resolves the CLI in this order:
 
-1. `$DAVINCIX_CLI` — explicit path to `davincix.sh`.
-2. Sibling `../kernel/davincix.sh` next to the UI.
+1. `$DAVINCI_CLI` — explicit path to `davinci.sh` (legacy `$DAVINCIX_CLI` is still accepted).
+2. Sibling `../kernel/davinci.sh` next to the UI.
 
-So on the dottes shell the recommended wiring is a symlink:
+So on the equisdots shell the recommended wiring is a symlink:
 
 ```bash
-ln -s ~/davincix ~/.config/hypr/scripts/quickshell/davincix/kernel
+ln -s ~/davinci ~/.config/hypr/scripts/quickshell/davinci/kernel
 ```
 
 Any other frontend only needs the CLI path.
@@ -42,36 +42,38 @@ Any other frontend only needs the CLI path.
 ## CLI
 
 ```bash
-davincix.sh set <file|url|scene-dir> [--video] [--monitors all|A,B] \
+davinci.sh set <file|url|scene-dir> [--video] [--monitors all|A,B] \
              [--transition name] [--thumb <poster>] [--notify] [--dry-run]
-davincix.sh fetch --name <n> --map <f> --dest <f> \
+davinci.sh fetch --name <n> --map <f> --dest <f> \
              [--thumb-in <f>] [--thumb-out <f>] [--monitors ...] [--transition ...]
-davincix.sh current [--thumb-name]
-davincix.sh thumbs
-davincix.sh search <query> [--source ddg|wallhaven|pexels|pixabay]
-davincix.sh search --continue <query>   # next page (keeps the cache)
-davincix.sh search --clear              # stop + drop the cache
-davincix.sh stop
-davincix.sh rm <file|scene-dir>
-davincix.sh import <paths…>
-davincix.sh slideshow start|stop|status [interval]
-davincix.sh keys [list | set NAME VALUE]   # provider API keys (keys.conf)
-davincix.sh paths
-davincix.sh --version
+davinci.sh current [--thumb-name]
+davinci.sh thumbs
+davinci.sh search <query> [--source ddg|wallhaven|pexels|pixabay]
+davinci.sh search --continue <query>   # next page (keeps the cache)
+davinci.sh search --clear              # stop + drop the cache
+davinci.sh stop
+davinci.sh rm <file|scene-dir>
+davinci.sh import <paths…>
+davinci.sh slideshow start|stop|status [interval]
+davinci.sh keys [list | set NAME VALUE]   # provider API keys (keys.conf)
+davinci.sh paths
+davinci.sh --version
 ```
+
+`DAVINCIX_*` aliases remain accepted for older scripts and installations.
 
 ## Environment overrides
 
 | Variable | Default | Use |
 |---|---|---|
-| `DAVINCIX_WALLPAPER_DIR` | `$WALLPAPER_DIR` or `~/.config/hypr/wallpapers` | source directory |
-| `DAVINCIX_CACHE_DIR` | `~/.cache/quickshell/wallpaper_picker` | thumbs, current, search |
-| `DAVINCIX_STATE_DIR` | `~/.local/state/quickshell/wallpaper_picker` | persistent flags |
-| `DAVINCIX_RUN_DIR` | `$XDG_RUNTIME_DIR/quickshell/wallpaper_picker` | control, locks, PIDs |
-| `DAVINCIX_LOG_DIR` | `$XDG_RUNTIME_DIR/quickshell/logs` | logs |
-| `DAVINCIX_XWWW` | `~/.local/bin/xwww`, then PATH | client used by the kernel |
-| `DAVINCIX_XWWW_DAEMON` | `~/.local/bin/xwww-daemon`, then PATH | daemon started when missing |
-| `DAVINCIX_CLI` | — | consumed by the UI (CLI location) |
+| `DAVINCI_WALLPAPER_DIR` | `$WALLPAPER_DIR` or `~/.config/hypr/wallpapers` | source directory |
+| `DAVINCI_CACHE_DIR` | `~/.cache/quickshell/wallpaper_picker` | thumbs, current, search |
+| `DAVINCI_STATE_DIR` | `~/.local/state/quickshell/wallpaper_picker` | persistent flags |
+| `DAVINCI_RUN_DIR` | `$XDG_RUNTIME_DIR/quickshell/wallpaper_picker` | control, locks, PIDs |
+| `DAVINCI_LOG_DIR` | `$XDG_RUNTIME_DIR/quickshell/logs` | logs |
+| `DAVINCI_XWWW` | `~/.local/bin/xwww`, then PATH | client used by the kernel |
+| `DAVINCI_XWWW_DAEMON` | `~/.local/bin/xwww-daemon`, then PATH | daemon started when missing |
+| `DAVINCI_CLI` | — | consumed by the UI (CLI location) |
 
 ## Interactive scenes (xwww)
 
@@ -95,7 +97,7 @@ wallpapers/astro-palette/
   bar palette within ~1s. The kernel keeps the cache for lock/SDDM
   (`current_wallpaper.png`) refreshed after applying.
 - **State**: the active scene dir is stored in
-  `$DAVINCIX_STATE_DIR/current_scene`; `init.sh` re-applies it on the next
+  `$DAVINCI_STATE_DIR/current_scene`; `init.sh` re-applies it on the next
   session. Applying an image or video removes it and stops the scene.
 
 Full reference: [docs/interactive-scenes.md](docs/interactive-scenes.md).
@@ -116,16 +118,16 @@ Full reference: [docs/interactive-scenes.md](docs/interactive-scenes.md).
 `slideshow start [interval]` runs a detached daemon that rotates still images
 (`--transition random`) and never repeats the previous one. State lives in the
 run/state dirs; resuming after a reboot needs an autostart entry in the host
-(e.g. `davincix.sh slideshow start` when the enabled flag exists).
+(e.g. `davinci.sh slideshow start` when the enabled flag exists).
 
 ## Testing
 
 ```bash
-bash davincix.sh --version
-bash davincix.sh paths
-bash davincix.sh current
-bash davincix.sh set ~/.config/hypr/wallpapers/7.png --dry-run   # no aplica
-bash davincix.sh thumbs
+bash davinci.sh --version
+bash davinci.sh paths
+bash davinci.sh current
+bash davinci.sh set ~/.config/hypr/wallpapers/7.png --dry-run   # no aplica
+bash davinci.sh thumbs
 ```
 
 ## Search notes
@@ -143,7 +145,7 @@ Search providers live in `providers/` (one script per source) and are plain
 - `pixabay.py` — Pixabay videos API (needs `PIXABAY_KEY`; free). thumb = Vimeo
   preview, full = best variant >= 1920x1080.
 
-API keys live in `$DAVINCIX_STATE_DIR/keys.conf` (sourced by `search.sh`) or the
+API keys live in `$DAVINCI_STATE_DIR/keys.conf` (sourced by `search.sh`) or the
 environment: `PEXELS_KEY`, `PIXABAY_KEY`.
 
 Video results keep an image thumbnail in the cache and the map stores the video

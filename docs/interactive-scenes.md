@@ -1,10 +1,10 @@
 # Interactive scenes
 
-`davincix` treats an interactive wallpaper ("scene") as one more entry of the
+`davinci` treats an interactive wallpaper ("scene") as one more entry of the
 wallpaper collection: it is detected, thumbnailed, applied with an entry
 transition and reported as the current wallpaper like any image or video.
 
-A scene is a directory inside `DAVINCIX_WALLPAPER_DIR` containing `scene.js`
+A scene is a directory inside `DAVINCI_WALLPAPER_DIR` containing `scene.js`
 (the `xwww` scene engine format). See `equisdots/background` for the collection
 contract and the available scenes.
 
@@ -33,20 +33,20 @@ picker shows what the wallpaper looks like at a glance.
 
 ## Applying
 
-`davincix set <path>` auto-detects a directory with `scene.js` and starts the
+`davinci set <path>` auto-detects a directory with `scene.js` and starts the
 scene instead of the image pipeline:
 
 ```sh
-davincix set ~/.config/hypr/wallpapers/astro-palette
-davincix set ~/.config/hypr/wallpapers/ascii-astro --transition decrypt
+davinci set ~/.config/hypr/wallpapers/astro-palette
+davinci set ~/.config/hypr/wallpapers/ascii-astro --transition decrypt
 ```
 
 - The transition is resolved like for images (`--transition` accepts the
   `xwww` set plus `random`; empty means random). It is used as the entry
   transition of the first frame; later frames are instant and delivered only
   when the scene canvas changes.
-- Scenes run at 15 fps (`DAVINCIX_SCENE_FPS` overrides it, e.g.
-  `DAVINCIX_SCENE_FPS=30 davincix set <scene>`) and follow the active bar
+- Scenes run at 15 fps (`DAVINCI_SCENE_FPS` overrides it, e.g.
+  `DAVINCI_SCENE_FPS=30 davinci set <scene>`) and follow the active bar
   palette; a palette change crossfades in the client (`--palette-fade`, 800 ms
   by default).
 - Applying an image or a video stops the running scene first.
@@ -55,10 +55,10 @@ davincix set ~/.config/hypr/wallpapers/ascii-astro --transition decrypt
 ## State and restore
 
 - The active scene directory is written to
-  `$DAVINCIX_STATE_DIR/current_scene` and removed when another wallpaper is
+  `$DAVINCI_STATE_DIR/current_scene` and removed when another wallpaper is
   applied.
-- `davincix current` prints `<dir>/scene.js` while a scene runs;
-  `davincix current --thumb-name` prints `scn_<name>.jpg`.
+- `davinci current` prints `<dir>/scene.js` while a scene runs;
+  `davinci current --thumb-name` prints `scn_<name>.jpg`.
 - `init.sh` in `equisdots/hyprland` re-applies `current_scene` on session
   start.
 
@@ -66,17 +66,17 @@ davincix set ~/.config/hypr/wallpapers/ascii-astro --transition decrypt
 
 - The slideshow only rotates still images and skips the base image of a scene
   directory.
-- `davincix rm <name>` accepts scenes (the whole directory is moved to the
+- `davinci rm <name>` accepts scenes (the whole directory is moved to the
   trash) and flattened nested paths (`sub__dir__pic.jpg`), and removes their
   thumbnails and manifest entries.
 
 ## Binary resolution
 
 The kernel resolves the `xwww` client itself instead of trusting the caller
-PATH: `DAVINCIX_XWWW`, then `~/.local/bin/xwww`, then `xwww` from PATH. The
+PATH: `DAVINCI_XWWW`, then `~/.local/bin/xwww`, then `xwww` from PATH. The
 desktop session PATH may not include `~/.local/bin` (Quickshell, for example),
 and that directory holds the scene-capable build installed by the dotfiles.
-The daemon follows the same rule through `DAVINCIX_XWWW_DAEMON`. Scene stop
+The daemon follows the same rule through `DAVINCI_XWWW_DAEMON`. Scene stop
 uses a bracket pattern (`[x]www scene run`) so it also matches processes started
 through the absolute path.
 

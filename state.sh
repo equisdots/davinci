@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════════════════
-# davincix · kernel — state
+# davinci · kernel — state
 #
 # Detects the current wallpaper (mpvpaper or xwww) and keeps the cached copy
 # that the lock screen and SDDM read (current_wallpaper.png).
