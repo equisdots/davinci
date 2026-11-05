@@ -21,10 +21,16 @@ if ! declare -F davinci_flat_name >/dev/null 2>&1; then
     source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/util.sh"
 fi
 
+: "${DAVINCI_THUMB_EDGE:=1440}"
+: "${DAVINCI_THUMB_QUALITY:=84}"
+: "${DAVINCI_THUMB_VERSION:=2}"
+THUMB_VERSION="${DAVINCI_THUMB_VERSION}:${DAVINCI_THUMB_EDGE}:${DAVINCI_THUMB_QUALITY}"
+THUMB_VERSION_FILE="$DAVINCI_THUMB_DIR/.thumb_version"
+
 # Rebuild the manifest from whatever is in the thumbnail directory.
 davinci_build_manifest() {
     find "$DAVINCI_THUMB_DIR" -maxdepth 1 -type f \
-        ! -name '.source_dir' ! -name '.manifest' \
+        ! -name '.source_dir' ! -name '.manifest' ! -name '.thumb_version' \
         -printf "%f\n" | sort > "$DAVINCI_MANIFEST"
 }
 
@@ -47,12 +53,26 @@ davinci_thumbs_prep() {
             read -r CACHED_SRC < "$THUMB_SOURCE_FILE"
             if [ "$CACHED_SRC" != "$SRC_DIR" ]; then
                 find "$THUMB_DIR" -maxdepth 1 -type f \
-                    ! -name '.source_dir' ! -name '.manifest' -delete
+                    ! -name '.source_dir' ! -name '.manifest' ! -name '.thumb_version' -delete
                 echo "$SRC_DIR" > "$THUMB_SOURCE_FILE"
                 > "$MANIFEST"
             fi
         else
             echo "$SRC_DIR" > "$THUMB_SOURCE_FILE"
+            > "$MANIFEST"
+        fi
+
+        # Changing the thumbnail edge/quality invalidates every cached file.
+        # Keep .source_dir so the source-dir migration above stays idempotent.
+        if [ -f "$THUMB_VERSION_FILE" ]; then
+            read -r CACHED_VERSION < "$THUMB_VERSION_FILE"
+        else
+            CACHED_VERSION=""
+        fi
+        if [ "$CACHED_VERSION" != "$THUMB_VERSION" ]; then
+            find "$THUMB_DIR" -maxdepth 1 -type f \
+                ! -name '.source_dir' ! -name '.manifest' -delete
+            printf '%s\n' "$THUMB_VERSION" > "$THUMB_VERSION_FILE"
             > "$MANIFEST"
         fi
 
@@ -95,11 +115,11 @@ davinci_thumbs_prep() {
             fi
 
             if [ -n "$base" ]; then
-                magick "$base" -resize x420 -quality 70 "$THUMB_DIR/$thumb" 2>/dev/null || true
+                magick "$base" -auto-orient -thumbnail "x${DAVINCI_THUMB_EDGE}" -strip -quality "${DAVINCI_THUMB_QUALITY}" "$THUMB_DIR/$thumb" 2>/dev/null || true
             else
-                magick -size 800x450 xc:'#111318' -gravity center \
-                    -fill '#8b93a7' -pointsize 44 -annotate 0 'scene.js' \
-                    -resize x420 -quality 70 "$THUMB_DIR/$thumb" 2>/dev/null || true
+                magick -size 2560x1440 xc:'#111318' -gravity center \
+                    -fill '#8b93a7' -pointsize 72 -annotate 0 'scene.js' \
+                    -resize "x${DAVINCI_THUMB_EDGE}" -quality "${DAVINCI_THUMB_QUALITY}" "$THUMB_DIR/$thumb" 2>/dev/null || true
             fi
         done < "$SCENES"
 
@@ -142,12 +162,13 @@ davinci_thumbs_prep() {
                     fi
                 fi
                 ffmpeg -y -ss "$thumb_offset" -i "$src" -vframes 1 \
-                    -threads 1 -f image2 -q:v 2 "$THUMB_DIR/$thumb" >/dev/null 2>&1
+                    -vf "scale=-2:${DAVINCI_THUMB_EDGE}" -threads 1 -f image2 -q:v 2 \
+                    "$THUMB_DIR/$thumb" >/dev/null 2>&1
             else
                 thumb="$flat"
                 echo "$thumb" >> "$EXPECTED"
                 [ -f "$THUMB_DIR/$thumb" ] && continue
-                magick "$src" -resize x420 -quality 70 "$THUMB_DIR/$thumb" 2>/dev/null || true
+                magick "$src" -auto-orient -thumbnail "x${DAVINCI_THUMB_EDGE}" -strip -quality "${DAVINCI_THUMB_QUALITY}" "$THUMB_DIR/$thumb" 2>/dev/null || true
             fi
         done < "$FILES"
 
@@ -155,7 +176,7 @@ davinci_thumbs_prep() {
         sort -o "$EXPECTED" "$EXPECTED"
         EXISTING=$(mktemp)
         find "$THUMB_DIR" -maxdepth 1 -type f \
-            ! -name '.source_dir' ! -name '.manifest' -printf '%f\n' | sort > "$EXISTING"
+            ! -name '.source_dir' ! -name '.manifest' ! -name '.thumb_version' -printf '%f\n' | sort > "$EXISTING"
         comm -23 "$EXISTING" "$EXPECTED" | while IFS= read -r orphan; do
             [ -n "$orphan" ] && rm -f "$THUMB_DIR/$orphan"
         done
