@@ -8,7 +8,7 @@
 # ═══════════════════════════════════════════════════════════════════════════
 
 # Valid xwww transitions (davinci_resolve_transition picks one for "random").
-DAVINCI_TRANSITIONS=(simple fade left right top bottom wipe grow center outer wave glitch decrypt dissolve clock zoom pixelate ripple blinds spiral static parallax parallax-left parallax-right parallax-invert melt shatter)
+DAVINCI_TRANSITIONS=(simple fade left right top bottom wipe grow center outer wave glitch decrypt dissolve clock zoom pixelate ripple blinds spiral static parallax parallax-left parallax-right parallax-invert melt shatter ink paint contagion waterdrop)
 
 # Start xwww-daemon if it is not alive.
 davinci_ensure_xwww() {
