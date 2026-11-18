@@ -3,6 +3,12 @@
 All notable changes to the davinci kernel are documented here.
 Dates use YYYY-MM-DD.
 
+## [2026-11-18]
+
+### Changed
+
+- Include the new xwww transitions `ink`, `paint`, `contagion` and `waterdrop` in the random pool.
+
 ## [2026-10-02]
 
 ### Added
